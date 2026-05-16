@@ -1,5 +1,0 @@
-# ninja log v7
-1	439	1778905929363213617	CMakeFiles/glad.dir/external/glad/src/gl.c.o	756ff751d83cb289
-439	472	1778905929802390963	libglad.a	ec919b78fe45e77a
-1	816	1778905929364581140	CMakeFiles/infinite_ttt.dir/src/main.cpp.o	1b97e2e2c716520d
-817	876	1778905930179224522	infinite_ttt	57271e78e5f382ee

@@ -1,4 +1,0 @@
-/home/rowan/dev/ttt/infinite_ttt_viewer/build/CMakeFiles/glad.dir
-/home/rowan/dev/ttt/infinite_ttt_viewer/build/CMakeFiles/infinite_ttt.dir
-/home/rowan/dev/ttt/infinite_ttt_viewer/build/CMakeFiles/edit_cache.dir
-/home/rowan/dev/ttt/infinite_ttt_viewer/build/CMakeFiles/rebuild_cache.dir
