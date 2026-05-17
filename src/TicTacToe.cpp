@@ -4,8 +4,8 @@ namespace ttt {
     TicTacToe::TicTacToe() {
     }
 
-    void TicTacToe::setCell(const glm::ivec2 cell, const CellState state) {
-        if (getCell(cell) != CellState::Empty) { return; }
+    bool TicTacToe::setCell(const glm::ivec2 cell, const CellState state) {
+        if (getCell(cell) != CellState::Empty) { return false; }
         m_cells[cell] = state;
         // right
         for (int i = 1; i < cellsToWin; ++i) {
@@ -79,6 +79,7 @@ namespace ttt {
                 m_wins.push_back(cell + glm::ivec2(-i, -i));
             }
         }
+        return true;
     }
 
     CellState TicTacToe::getCell(const glm::ivec2 cell) const {

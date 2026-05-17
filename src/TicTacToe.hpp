@@ -27,8 +27,7 @@ namespace ttt {
     public:
         TicTacToe();
 
-
-        void setCell(const glm::ivec2 cell, const CellState state);
+        bool setCell(const glm::ivec2 cell, const CellState state);
         CellState getCell(const glm::ivec2 cell) const;
 
         std::unordered_map<glm::ivec2, CellState, IVec2Hash> m_cells;
