@@ -1,82 +1,27 @@
 #include "TicTacToe.hpp"
+#include <iostream>
 
 namespace ttt {
-    TicTacToe::TicTacToe() {
+    TicTacToe::TicTacToe()
+        : m_cells(), m_wins() {
     }
+
+    inline constexpr std::array<glm::ivec2, 4> rays {{
+        {-1,  0},
+        { 0, -1},
+        {-1, -1},
+        {-1,  1}
+    }};
 
     bool TicTacToe::setCell(const glm::ivec2 cell, const CellState state) {
         if (getCell(cell) != CellState::Empty) { return false; }
-        m_cells[cell] = state;
-        // right
-        for (int i = 1; i < cellsToWin; ++i) {
-            if (getCell(cell + glm::ivec2(i, 0)) != state) { break; }
-            if (i == cellsToWin - 1)
-            {
-                m_wins.push_back(cell);
-                m_wins.push_back(cell + glm::ivec2(i, 0));
-            }
-        }
-        // down
-        for (int i = 1; i < cellsToWin; ++i) {
-            if (getCell(cell + glm::ivec2(0, i)) != state) { break; }
-            if (i == cellsToWin - 1)
-            {
-                m_wins.push_back(cell);
-                m_wins.push_back(cell + glm::ivec2(0, i));
-            }
-        }
-        // down right
-        for (int i = 1; i < cellsToWin; ++i) {
-            if (getCell(cell + glm::ivec2(i, i)) != state) { break; }
-            if (i == cellsToWin - 1)
-            {
-                m_wins.push_back(cell);
-                m_wins.push_back(cell + glm::ivec2(i, i));
-            }
-        }
-        // down left
-        for (int i = 1; i < cellsToWin; ++i) {
-            if (getCell(cell + glm::ivec2(-i, i)) != state) { break; }
-            if (i == cellsToWin - 1)
-            {
-                m_wins.push_back(cell);
-                m_wins.push_back(cell + glm::ivec2(-i, i));
-            }
-        }
-        // left
-        for (int i = 1; i < cellsToWin; ++i) {
-            if (getCell(cell + glm::ivec2(-i, 0)) != state) { break; }
-            if (i == cellsToWin - 1)
-            {
-                m_wins.push_back(cell);
-                m_wins.push_back(cell + glm::ivec2(-i, 0));
-            }
-        }
-        // up
-        for (int i = 1; i < cellsToWin; ++i) {
-            if (getCell(cell + glm::ivec2(0, -i)) != state) { break; }
-            if (i == cellsToWin - 1)
-            {
-                m_wins.push_back(cell);
-                m_wins.push_back(cell + glm::ivec2(0, -i));
-            }
-        }
-        // up right
-        for (int i = 1; i < cellsToWin; ++i) {
-            if (getCell(cell + glm::ivec2(i, -i)) != state) { break; }
-            if (i == cellsToWin - 1)
-            {
-                m_wins.push_back(cell);
-                m_wins.push_back(cell + glm::ivec2(i, -i));
-            }
-        }
-        // up left
-        for (int i = 1; i < cellsToWin; ++i) {
-            if (getCell(cell + glm::ivec2(-i, -i)) != state) { break; }
-            if (i == cellsToWin - 1)
-            {
-                m_wins.push_back(cell);
-                m_wins.push_back(cell + glm::ivec2(-i, -i));
+        for (const glm::ivec2& ray : rays) {
+            m_cells[cell] = state;
+            unsigned int dist = raycast(cell, ray, cellsToWin);
+            unsigned int opisiteDist = raycast(cell, -ray, cellsToWin);
+            if (dist + opisiteDist + 1 >= cellsToWin) {
+                m_wins.push_back(cell - (ray * static_cast<int>(opisiteDist)));
+                m_wins.push_back(cell + (ray * static_cast<int>(dist)));
             }
         }
         return true;
@@ -89,5 +34,15 @@ namespace ttt {
         }
 
         return CellState::Empty;
+    }
+
+    unsigned int TicTacToe::raycast(glm::ivec2 start, const glm::ivec2 dir, const unsigned int maxDist) const {
+        unsigned int i = 0;
+        const CellState state = getCell(start);
+        while (i < maxDist && state == getCell(start + dir)) {
+            start += dir;
+            ++i;
+        }
+        return i;
     }
 }

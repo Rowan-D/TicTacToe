@@ -30,6 +30,8 @@ namespace ttt {
         bool setCell(const glm::ivec2 cell, const CellState state);
         CellState getCell(const glm::ivec2 cell) const;
 
+        unsigned int raycast(glm::ivec2 start, glm::ivec2 dir, unsigned int maxDist) const;
+
         std::unordered_map<glm::ivec2, CellState, IVec2Hash> m_cells;
         std::vector<glm::ivec2> m_wins;
     };
