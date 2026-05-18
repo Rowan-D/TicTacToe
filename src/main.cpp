@@ -118,6 +118,7 @@ int main(int, char**) {
     glm::vec2 mouse(0.0f);
 
     ttt::TicTacToe ticTacToe;
+    ttt::TicTacToe::State state(ttt::CellState::X);
 
     while (running) {
         SDL_Event e{};
@@ -148,16 +149,16 @@ int main(int, char**) {
                     mouse = {e.button.x, e.button.y};
                     dragWorld = screenToWorldPoint(mouse, cam, size);
 
-                    if (ticTacToe.m_wins.empty()) {
-                        if (ticTacToe.setCell(
+                    if (ticTacToe.wins.empty()) {
+                        if (ticTacToe.setCell(state,
                             glm::ivec2(
                                 static_cast<int>(std::floor(dragWorld.x)),
                                 static_cast<int>(std::floor(dragWorld.y))
                             ),
-                            ttt::CellState::X
+                            state.turn
                         )) {
-                            if (ticTacToe.m_wins.empty()) {
-                                ticTacToe.setCell(ticTacToe.findMove(ttt::CellState::O), ttt::CellState::O);
+                            if (ticTacToe.wins.empty()) {
+                                ticTacToe.setCell(state, ticTacToe.findMove(state, ttt::CellState::O), ttt::CellState::O);
                             }
                         }
                     }
@@ -213,9 +214,9 @@ int main(int, char**) {
 
         drawGrid(renderer, cam, size);
 
-        for (int i = 0; i < ticTacToe.m_wins.size(); i += 2) {
-            glm::vec2 win0 = ticTacToe.m_wins[i];
-            glm::vec2 win1 = ticTacToe.m_wins[i + 1];
+        for (int i = 0; i < ticTacToe.wins.size(); i += 2) {
+            glm::vec2 win0 = ticTacToe.wins[i];
+            glm::vec2 win1 = ticTacToe.wins[i + 1];
             renderer.setColor(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
             const float thick = scaledStrokeThickness(cam) * 1.5f;
 
@@ -227,10 +228,10 @@ int main(int, char**) {
                 thick
             );
         }
-        for (const auto& [cell, state] : ticTacToe.m_cells) {
-            if (state == ttt::CellState::X) {
+        for (const auto& [cell, cellState] : state.cells) {
+            if (cellState == ttt::CellState::X) {
                 drawX(renderer, cam, size, cell);
-            } else if (state == ttt::CellState::O) {
+            } else if (cellState == ttt::CellState::O) {
                 drawO(renderer, cam, size, cell);
             }
         }

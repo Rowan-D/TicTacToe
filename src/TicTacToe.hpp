@@ -18,25 +18,35 @@ namespace ttt {
                  ^ static_cast<std::size_t>(y);
         }
     };
+
     enum class CellState {
         Empty,
         X,
         O
     };
-    class TicTacToe {
+
+    class TicTacToe
+    {
     public:
-        TicTacToe();
+        TicTacToe() : wins() {}
 
-        bool setCell(const glm::ivec2 cell, const CellState state);
-        CellState getCell(const glm::ivec2 cell) const;
+        struct State {
+            State(const CellState turn)
+                : cells(), turn(turn) {}
 
-        unsigned int raycast(glm::ivec2 start, glm::ivec2 dir, unsigned int maxDist) const;
+            std::unordered_map<glm::ivec2, CellState, IVec2Hash> cells;
+            CellState turn;
+        };
 
-        glm::ivec2 findMove(const CellState state) const;
-        int evaluateMove(const glm::ivec2 move) const;
+        bool setCell(State& state, const glm::ivec2 cell, const CellState cellState);
+        CellState getCell(const State& state, const glm::ivec2 cell) const;
 
-        std::unordered_map<glm::ivec2, CellState, IVec2Hash> m_cells;
-        std::vector<glm::ivec2> m_wins;
+        unsigned int raycast(const State& state, glm::ivec2 start, glm::ivec2 dir, unsigned int maxDist) const;
+
+        glm::ivec2 findMove(const State& state, const CellState cellState) const;
+        int evaluateMove(const State& state, const glm::ivec2 move) const;
+
+        std::vector<glm::ivec2> wins;
     };
 }
 
