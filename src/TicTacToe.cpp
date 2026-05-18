@@ -1,5 +1,6 @@
 #include "TicTacToe.hpp"
 #include <iostream>
+#include <unordered_map>
 
 namespace ttt {
     TicTacToe::TicTacToe()
@@ -44,5 +45,45 @@ namespace ttt {
             ++i;
         }
         return i;
+    }
+    
+    glm::ivec2 TicTacToe::findMove(const CellState state) const {
+        //std::unordered_map<glm::ivec2, int, IVec2Hash> moves;
+        int best = -1;
+        glm::ivec2 move(0);
+        for (const auto& [cell, state] : m_cells) {
+            for (const glm::ivec2& ray : rays) {
+                if (getCell(cell + ray) == CellState::Empty) {
+                    int score = evaluateMove(cell + ray);
+                    if (score > best) {
+                        best = score;
+                        move = cell + ray;
+                    }
+                }
+                if (getCell(cell - ray) == CellState::Empty) {
+                    int score = evaluateMove(cell - ray);
+                    if (score > best) {
+                        best = score;
+                        move = cell - ray;
+                    }
+                }
+            }
+        }
+        return move;
+    }
+
+    int TicTacToe::evaluateMove(const glm::ivec2 move) const {
+        int score = 0;
+        for (const glm::ivec2& ray : rays) {
+            if (getCell(move + ray) != CellState::Empty) {
+                int rayDist = raycast(move + ray, ray, cellsToWin) + 1;
+                score += rayDist * rayDist;
+            }
+            if (getCell(move - ray) != CellState::Empty) {
+                int rayDist = raycast(move - ray, -ray, cellsToWin) + 1;
+                score += rayDist * rayDist;
+            }
+        }
+        return score;
     }
 }

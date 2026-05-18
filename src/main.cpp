@@ -118,7 +118,6 @@ int main(int, char**) {
     glm::vec2 mouse(0.0f);
 
     ttt::TicTacToe ticTacToe;
-    ttt::CellState turn = ttt::CellState::X;
 
     while (running) {
         SDL_Event e{};
@@ -149,19 +148,18 @@ int main(int, char**) {
                     mouse = {e.button.x, e.button.y};
                     dragWorld = screenToWorldPoint(mouse, cam, size);
 
-                    if (ticTacToe.setCell(
-                        glm::ivec2(
-                            static_cast<int>(std::floor(dragWorld.x)),
-                            static_cast<int>(std::floor(dragWorld.y))
-                        ),
-                        turn
-                    )) {
-
-                    if (turn == ttt::CellState::X) {
-                        turn = ttt::CellState::O;
-                    } else {
-                        turn = ttt::CellState::X;
-                    }
+                    if (ticTacToe.m_wins.empty()) {
+                        if (ticTacToe.setCell(
+                            glm::ivec2(
+                                static_cast<int>(std::floor(dragWorld.x)),
+                                static_cast<int>(std::floor(dragWorld.y))
+                            ),
+                            ttt::CellState::X
+                        )) {
+                            if (ticTacToe.m_wins.empty()) {
+                                ticTacToe.setCell(ticTacToe.findMove(ttt::CellState::O), ttt::CellState::O);
+                            }
+                        }
                     }
 
                 }

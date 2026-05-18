@@ -32,6 +32,9 @@ namespace ttt {
 
         unsigned int raycast(glm::ivec2 start, glm::ivec2 dir, unsigned int maxDist) const;
 
+        glm::ivec2 findMove(const CellState state) const;
+        int evaluateMove(const glm::ivec2 move) const;
+
         std::unordered_map<glm::ivec2, CellState, IVec2Hash> m_cells;
         std::vector<glm::ivec2> m_wins;
     };
